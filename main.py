@@ -19,11 +19,43 @@ STREAK_DAYS_REQUIRED = 7
 
 # Server rules to be shown in welcome message
 SERVER_RULES = [
-    "✅ Be respectful to all members.",
-    "✅ No hate speech or harassment.",
-    "✅ No spamming or excessive self-promotion.",
-    "✅ Use the correct channels for your messages.",
-    "✅ Follow Discord's Terms of Service."
+    "✅ **Be respectful**: Treat all members with kindness and patience.",
+    "✅ **No Harassment**: Zero tolerance for hate speech, bullying, or slurs.",
+    "✅ **No Spamming**: Keep the channels clean and avoid excessive self-promotion.",
+    "✅ **Semantic Channels**: Use the appropriate channels for your discussions.",
+    "✅ **ToS Compliance**: Always follow Discord's official Terms of Service."
+]
+
+ARGUS_INTRO = [
+    (
+        "🛡️ **Argus Protocol — Full Introduction** 🛡️\n\n"
+        "**What Is Argus Protocol?**\n"
+        "Argus Protocol is the first self-healing, Zero-Ops infrastructure layer built on top of GhostDAG — the consensus mechanism that powers the Kaspa blockchain. "
+        "It is an intelligent orchestration layer that sits between a raw GhostDAG node and the applications that depend on it — "
+        "making that node behave like a system that thinks, repairs itself, and optimizes itself without human intervention.\n\n"
+        "**The Problem It Solves**\n"
+        "Running a GhostDAG node is hard. The consensus algorithm requires careful management of the k-parameter. "
+        "If misconfigured, orphan rates climb and the node drifts. Argus eliminates this by managing:\n"
+        "1️⃣ **Blue-set divergence**\n"
+        "2️⃣ **Lag accumulation**\n"
+        "3️⃣ **Peer isolation**"
+    ),
+    (
+        "⚙️ **How It Works (The Engine)**\n\n"
+        "**argus-agent**: The heart of Argus. A self-healing agent that detects drift or lag and triggers autonomous recovery without human touch.\n"
+        "**argus-linearizer**: Flattens the 3D block DAG into a linear edge stream for AI agents and Graph Neural Networks (GNNs).\n"
+        "**argus-optimizer**: Uses Proximal Policy Optimization (RL) to continuously observe orphan rates and automatically adjust the k-parameter.\n"
+        "**argus-gateway**: A Zero-Ops API that exposes health reporting, DAG subgraph retrieval, and real-time event streams."
+    ),
+    (
+        "💎 **Key Features & Status**\n\n"
+        "🚀 **Zero-Ops**: Configure once, walk away. The agent handles failures autonomously.\n"
+        "🧠 **Live Reinforcement Learning**: The PPO optimizer learns and improves k-parameter recommendations over time.\n"
+        "📊 **Probabilistic Finality**: Provides a 0.0–1.0 confidence score for transaction finality.\n\n"
+        "**Current Status:** Argus is open source and live! Next up: The Argus Meme Coin Launchpad (AGR token reward system).\n\n"
+        "🔗 **Repository:** github.com/Fortunehack45/Argus-Synapse\n"
+        "🌐 **Website:** argus-protocol.xyz"
+    )
 ]
 
 # ---------------------------------------------------------------------------
@@ -228,11 +260,24 @@ async def on_member_join(member: discord.Member):
     channel = discord.utils.get(member.guild.text_channels, name=WELCOME_CHANNEL_NAME)
     if channel:
         rules_text = "\n".join(SERVER_RULES)
+        
+        # 1. Official Welcome & Rules
         await channel.send(
-            f"🎊 **WELCOME TO THE SERVER!** 🎊\n"
-            f"Everyone please welcome {member.mention} to our community! 🚀\n\n"
-            f"📜 **SERVER RULES:**\n{rules_text}\n\n"
-            f"*Make sure to follow the rules and have a great time!*"
+            f"🎊 **WELCOME TO THE SERVER, {member.mention}!** 🎊\n"
+            f"We are thrilled to have you here at the forefront of GhostDAG innovation! 🚀\n\n"
+            f"📜 **COMMUNITY RULES:**\n{rules_text}\n\n"
+            f"*Please take a moment to read our rules. Your presence here makes the network stronger!*"
+        )
+        
+        # 2. Argus Protocol Introduction (in chunks)
+        for chunk in ARGUS_INTRO:
+            await channel.send(chunk)
+            
+        await channel.send(
+            f"--- \n"
+            f"🏛️ **Founder Note:** Designed and built by **Esho Fortune Adebayo**, "
+            f"systems engineer and Info Systems student at FUTA. Proof that will overcomes distance! \n"
+            f"---"
         )
     else:
         print(f"[WARN] Welcome channel '{WELCOME_CHANNEL_NAME}' not found.")
