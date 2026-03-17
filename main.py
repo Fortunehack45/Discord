@@ -303,6 +303,20 @@ async def handle_dynamic_slowmode(channel: discord.TextChannel):
 
 
 # ---------------------------------------------------------------------------
+# Commands
+# ---------------------------------------------------------------------------
+@bot.command(name='role')
+async def check_role(ctx: commands.Context):
+    """Allows users to check their current roles."""
+    roles = [role.name for role in ctx.author.roles if role.name != "@everyone"]
+    if not roles:
+        await ctx.reply("You don't have any specialized roles yet! Keep being active to earn the **Regular** role. 🚀")
+    else:
+        roles_list = ", ".join(roles)
+        await ctx.reply(f"🛡️ **Your Roles:** {roles_list}")
+
+
+# ---------------------------------------------------------------------------
 # Events
 # ---------------------------------------------------------------------------
 @bot.event

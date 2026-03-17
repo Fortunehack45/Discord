@@ -6,6 +6,9 @@ A production-ready Discord bot built with `discord.py` (Python 3.12+) and config
 
 This bot operates primarily through intelligent event handling rather than traditional slash commands (to keep the interface clean and reactive).
 
+### 🛠️ Bot Commands
+- `!role` - List all your current server roles.
+
 ### 🛡️ Argus Protocol Q&A
 The bot is a knowledge expert on the **Argus Protocol**. Mention the bot or type "Argus" along with any of these keywords to get an answer:
 - `what is` - General overview of Argus.
