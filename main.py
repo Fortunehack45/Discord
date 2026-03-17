@@ -17,6 +17,15 @@ WELCOME_CHANNEL_NAME = os.getenv('WELCOME_CHANNEL_NAME', 'general-discussion')
 ACTIVITY_ROLE_NAME = "Regular"
 STREAK_DAYS_REQUIRED = 7
 
+# Server rules to be shown in welcome message
+SERVER_RULES = [
+    "✅ Be respectful to all members.",
+    "✅ No hate speech or harassment.",
+    "✅ No spamming or excessive self-promotion.",
+    "✅ Use the correct channels for your messages.",
+    "✅ Follow Discord's Terms of Service."
+]
+
 # ---------------------------------------------------------------------------
 # Bot setup
 # ---------------------------------------------------------------------------
@@ -168,13 +177,16 @@ async def handle_dynamic_slowmode(channel: discord.TextChannel):
 
     count = len(message_counts[channel_id])
 
-    # Thresholds: >30 msgs/2min → 5 min, >20 → 3 min, >10 → 1 min, else 0
-    if count > 30:
-        new_slowmode = 300
-    elif count > 20:
-        new_slowmode = 180
-    elif count > 10:
+    # Lowered thresholds for better visibility and reactivity:
+    # >5 msgs/2min -> 10s, >10 msgs -> 30s, >15 msgs -> 1m, >20 msgs -> 2m
+    if count > 20:
+        new_slowmode = 120
+    elif count > 15:
         new_slowmode = 60
+    elif count > 10:
+        new_slowmode = 30
+    elif count > 5:
+        new_slowmode = 10
     else:
         new_slowmode = 0
 
@@ -215,10 +227,12 @@ async def on_member_join(member: discord.Member):
     # Channel welcome
     channel = discord.utils.get(member.guild.text_channels, name=WELCOME_CHANNEL_NAME)
     if channel:
+        rules_text = "\n".join(SERVER_RULES)
         await channel.send(
             f"🎊 **WELCOME TO THE SERVER!** 🎊\n"
-            f"Everyone please welcome {member.mention} to our community! 🚀\n"
-            f"*Make sure to check the rules and have a great time!*"
+            f"Everyone please welcome {member.mention} to our community! 🚀\n\n"
+            f"📜 **SERVER RULES:**\n{rules_text}\n\n"
+            f"*Make sure to follow the rules and have a great time!*"
         )
     else:
         print(f"[WARN] Welcome channel '{WELCOME_CHANNEL_NAME}' not found.")
