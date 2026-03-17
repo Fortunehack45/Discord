@@ -26,7 +26,27 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 # ---------------------------------------------------------------------------
 # Profanity list
 # ---------------------------------------------------------------------------
-BANNED_WORDS = ['shit', 'fuck', 'motherfucker', 'nigga', 'faggot']
+BANNED_WORDS = [
+    # General profanity
+    'shit', 'bullshit', 'shithead', 'shitface',
+    'fuck', 'fucker', 'fucking', 'motherfucker', 'fuckface', 'fuckhead',
+    'ass', 'asshole', 'asshat', 'asswipe',
+    'bitch', 'bitches', 'son of a bitch',
+    'bastard', 'dick', 'dickhead', 'cock', 'cunt', 'pussy', 'prick',
+    'damn', 'goddamn', 'hell',
+    'crap', 'piss', 'pissed',
+    # Slurs & hate speech
+    'nigga', 'nigger', 'nigg',
+    'faggot', 'fag', 'dyke',
+    'retard', 'retarded',
+    'spic', 'chink', 'kike', 'gook', 'wetback', 'cracker', 'honky',
+    'whore', 'slut', 'hoe', 'skank', 'thot',
+    # Sexual
+    'sex', 'sexy', 'penis', 'vagina', 'boobs', 'tits', 'porn', 'nude', 'nudes',
+    # Violence / threats
+    'kill yourself', 'kys', 'go die', 'kill urself',
+]
+
 
 # ---------------------------------------------------------------------------
 # Persistence helpers
