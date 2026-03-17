@@ -316,6 +316,24 @@ async def check_role(ctx: commands.Context):
         await ctx.reply(f"🛡️ **Your Roles:** {roles_list}")
 
 
+@bot.command(name='strike')
+async def check_strikes(ctx: commands.Context):
+    """Allows users to check their remaining strikes."""
+    strikes = load_strikes()
+    user_id = str(ctx.author.id)
+    current_strikes = strikes.get(user_id, 0)
+    
+    strikes_left = 5 - current_strikes
+    
+    if current_strikes == 0:
+        await ctx.reply("✅ You have **0** strikes! Keep up the good behavior. 😊")
+    else:
+        await ctx.reply(
+            f"⚠️ You have **{current_strikes}** strikes. "
+            f"You have **{strikes_left}** strikes left before being kicked."
+        )
+
+
 # ---------------------------------------------------------------------------
 # Events
 # ---------------------------------------------------------------------------

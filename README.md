@@ -8,6 +8,7 @@ This bot operates primarily through intelligent event handling rather than tradi
 
 ### 🛠️ Bot Commands
 - `!role` - List all your current server roles.
+- `!strike` - Check how many strikes you have left before being kicked.
 
 ### 🛡️ Argus Protocol Q&A
 The bot is a knowledge expert on the **Argus Protocol**. Mention the bot or type "Argus" along with any of these keywords to get an answer:
