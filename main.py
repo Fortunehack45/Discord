@@ -59,6 +59,75 @@ ARGUS_INTRO = [
 ]
 
 # ---------------------------------------------------------------------------
+# Argus Knowledge Base (FAQ)
+# ---------------------------------------------------------------------------
+ARGUS_FAQ = {
+    "what is": (
+        "🛡️ **Argus Protocol** is a self-healing infrastructure layer built on top of GhostDAG (Kaspa). "
+        "It acts as an intelligent orchestration layer that makes blockchain nodes think, repair, and optimize themselves automatically."
+    ),
+    "ghostdag": (
+        "👻 **GhostDAG** is the consensus mechanism powering Kaspa. Unlike traditional chains, it maintains a directed acyclic graph (DAG) of blocks. "
+        "Argus makes this complex system manageable for production use."
+    ),
+    "problem": (
+        "🛠️ **Argus solves node drift, lag, and isolation.** It eliminates the need for manual intervention when orphan rates spike or nodes fall behind the network."
+    ),
+    "k-parameter": (
+        "⚖️ The **k-parameter** controls the blue/red block classification in GhostDAG. Argus uses its **argus-optimizer** (Reinforcement Learning) "
+        "to automatically adjust k based on live network conditions."
+    ),
+    "agent": (
+        "🤖 The **argus-agent** is the self-healing heart of the protocol. It runs as a state machine that detects unhealthy nodes "
+        "and triggers autonomous recovery procedures."
+    ),
+    "linearizer": (
+        "📈 The **argus-linearizer** flattens the 3D block DAG into a linear edge stream. This allows AI agents and Graph Neural Networks (GNNs) "
+        "to consume blockchain data in real-time."
+    ),
+    "optimizer": (
+        "🧠 The **argus-optimizer** uses PPO (Proximal Policy Optimization) reinforcement learning to minimize orphan rates "
+        "by intelligently tuning the network's k-parameter."
+    ),
+    "gateway": (
+        "🌐 The **argus-gateway** provides a high-performance REST and WebSocket API for health reporting, finality scoring, and DAG analysis."
+    ),
+    "finality": (
+        "🔍 Argus provides **Probabilistic Finality Scoring**. It translates complex DAG structure into a clear 0.0–1.0 confidence score for every transaction."
+    ),
+    "founder": (
+        "🏛️ Argus Protocol was designed and built by **Esho Fortune Adebayo**, a systems engineer and Info Systems student at FUTA, Nigeria."
+    ),
+    "status": (
+        "⚡ Argus is open source and live! The next major milestone is the **Argus Meme Coin Launchpad** using the AGR token system."
+    ),
+    "token": (
+        "🪙 The native token of the Argus ecosystem is **AGR**, used for transactions and rewards within the upcoming Launchpad."
+    ),
+    "website": "🌐 Visit us at: https://argus-protocol.xyz",
+    "github": "🔗 Repository: https://github.com/Fortunehack45/Argus-Synapse"
+}
+
+
+async def handle_argus_questions(message: discord.Message):
+    content = message.content.lower()
+    
+    # Check for keywords and reply with relevant FAQ entry
+    for key, answer in ARGUS_FAQ.items():
+        if key in content:
+            await message.reply(f"{answer}")
+            return True
+            
+    # Default response if they mentioned argus but no specific keyword matched
+    if "argus" in content:
+        await message.reply(
+            "I noticed you mentioned **Argus Protocol**! 🛡️\n"
+            "You can ask me about: *what it is, how it works, the self-healing agent, k-parameter, the founder, token (AGR), or the website*."
+        )
+        return True
+    return False
+
+# ---------------------------------------------------------------------------
 # Bot setup
 # ---------------------------------------------------------------------------
 intents = discord.Intents.all()
@@ -298,6 +367,13 @@ async def on_message(message: discord.Message):
     # ------------------------------------------------------------------
     if bot.user.mentioned_in(message) and not message.mention_everyone:
         await message.reply(f"Hello {message.author.mention}! How can I help you today? 😊")
+
+    # 1.5 Argus Q&A System
+    # Check if the message is a question about Argus (either tags bot or mentions argus)
+    if "argus" in message.content.lower() or bot.user.mentioned_in(message):
+        # We only auto-reply to mentions or direct mentions of Argus to avoid being too spammy
+        if await handle_argus_questions(message):
+            return
 
     # ------------------------------------------------------------------
     # 2. Profanity filter & strike system
