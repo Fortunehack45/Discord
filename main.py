@@ -95,9 +95,6 @@ ARGUS_FAQ = {
     "finality": (
         "🔍 Argus provides **Probabilistic Finality Scoring**. It translates complex DAG structure into a clear 0.0–1.0 confidence score for every transaction."
     ),
-    "founder": (
-        "🏛️ Argus Protocol was designed and built by **Esho Fortune Adebayo**, a systems engineer and Info Systems student at FUTA, Nigeria."
-    ),
     "status": (
         "⚡ Argus is open source and live! The next major milestone is the **Argus Meme Coin Launchpad** using the AGR token system."
     ),
@@ -343,10 +340,9 @@ async def on_member_join(member: discord.Member):
             await channel.send(chunk)
             
         await channel.send(
-            f"--- \n"
-            f"🏛️ **Founder Note:** Designed and built by **Esho Fortune Adebayo**, "
-            f"systems engineer and Info Systems student at FUTA. Proof that will overcomes distance! \n"
-            f"---"
+            "--- \n"
+            "🛡️ *The future of GhostDAG is self-healing. Enjoy your stay!* \n"
+            "---"
         )
     else:
         print(f"[WARN] Welcome channel '{WELCOME_CHANNEL_NAME}' not found.")
