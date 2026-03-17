@@ -4,6 +4,7 @@ import os
 import json
 from typing import Dict, List
 from datetime import datetime, timedelta, timezone, date
+import re
 from dotenv import load_dotenv # type: ignore
 
 # ---------------------------------------------------------------------------
@@ -415,45 +416,61 @@ async def on_message(message: discord.Message):
     # 1. Profanity filter & strike system (PRIORITY)
     # ------------------------------------------------------------------
     content_lower = message.content.lower()
-    if any(word in content_lower for word in BANNED_WORDS):
-        await message.delete()
+    
+    # DEBUG: Print all message content to console to verify Content Intent
+    print(f"[DEBUG] Received message from {message.author}: '{message.content}'")
 
-        strikes = load_strikes()
-        user_id = str(message.author.id)
-        current_strikes = strikes.get(user_id, 0) + 1
-        strikes[user_id] = current_strikes
-        save_strikes(strikes)
-
-        if current_strikes >= 5:
+    # Use regex for whole-word matching to be more accurate (e.g. don't catch 'hello' for 'hell')
+    for word in BANNED_WORDS:
+        pattern = rf"\b{re.escape(word.lower())}\b"
+        if re.search(pattern, content_lower):
+            print(f"[MOD] Banned word detected: '{word}' in message from {message.author}")
             try:
-                # DM before kick
-                try:
-                    await message.author.send(
-                        f"🚫 You have been kicked from **{message.guild.name}** for reaching "
-                        f"the maximum limit of 5 strikes for profanity."
-                    )
-                except discord.Forbidden:
-                    pass
-
-                await message.guild.kick(
-                    message.author, reason="Reached 5 strikes for profanity."
-                )
-                await message.channel.send(
-                    f"🚫 **{message.author.name}** has been kicked for repeated profanity."
-                )
-                strikes.pop(user_id, None)
-                save_strikes(strikes)
+                await message.delete()
+                print(f"[MOD] Successfully deleted message from {message.author}")
             except discord.Forbidden:
-                await message.channel.send("⚠️ I don't have permission to kick this user.")
-        else:
-            strikes_left = 5 - current_strikes
-            await message.channel.send(
-                f"⚠️ Warning {message.author.mention}! Profanity is not allowed. "
-                f"You have **{strikes_left}** strikes left before being kicked.",
-                delete_after=10,
-            )
-        # Don't process further if message was deleted
-        return
+                print(f"[ERROR] Missing 'Manage Messages' permission to delete message from {message.author}!")
+                await message.channel.send("⚠️ **Bot Error:** I don't have permission to delete messages (Manage Messages).", delete_after=5)
+                return # Don't process strikes if we can't delete
+
+            strikes = load_strikes()
+            user_id = str(message.author.id)
+            current_strikes = strikes.get(user_id, 0) + 1
+            strikes[user_id] = current_strikes
+            save_strikes(strikes)
+            print(f"[MOD] Applied strike to {message.author}. Total: {current_strikes}")
+
+            if current_strikes >= 5:
+                try:
+                    # DM before kick
+                    try:
+                        await message.author.send(
+                            f"🚫 You have been kicked from **{message.guild.name}** for reaching "
+                            f"the maximum limit of 5 strikes for profanity."
+                        )
+                    except discord.Forbidden:
+                        pass
+
+                    await message.guild.kick(
+                        message.author, reason="Reached 5 strikes for profanity."
+                    )
+                    await message.channel.send(
+                        f"🚫 **{message.author.name}** has been kicked for repeated profanity."
+                    )
+                    strikes.pop(user_id, None)
+                    save_strikes(strikes)
+                except discord.Forbidden:
+                    print(f"[ERROR] Missing 'Kick Members' permission to kick {message.author}!")
+                    await message.channel.send("⚠️ I don't have permission to kick this user.")
+            else:
+                strikes_left = 5 - current_strikes
+                await message.channel.send(
+                    f"⚠️ Warning {message.author.mention}! Profanity is not allowed. "
+                    f"You have **{strikes_left}** strikes left before being kicked.",
+                    delete_after=10,
+                )
+            # Don't process further if message was deleted/flagged
+            return
 
     # ------------------------------------------------------------------
     # 2. Mention reply
