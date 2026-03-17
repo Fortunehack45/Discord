@@ -215,7 +215,11 @@ async def on_member_join(member: discord.Member):
     # Channel welcome
     channel = discord.utils.get(member.guild.text_channels, name=WELCOME_CHANNEL_NAME)
     if channel:
-        await channel.send(f"🎉 Welcome {member.mention} to the server! Say hi everyone!")
+        await channel.send(
+            f"🎊 **WELCOME TO THE SERVER!** 🎊\n"
+            f"Everyone please welcome {member.mention} to our community! 🚀\n"
+            f"*Make sure to check the rules and have a great time!*"
+        )
     else:
         print(f"[WARN] Welcome channel '{WELCOME_CHANNEL_NAME}' not found.")
 
@@ -251,6 +255,15 @@ async def on_message(message: discord.Message):
 
         if current_strikes >= 5:
             try:
+                # DM before kick
+                try:
+                    await message.author.send(
+                        f"🚫 You have been kicked from **{message.guild.name}** for reaching "
+                        f"the maximum limit of 5 strikes for profanity."
+                    )
+                except discord.Forbidden:
+                    pass
+
                 await message.guild.kick(
                     message.author, reason="Reached 5 strikes for profanity."
                 )
@@ -288,6 +301,14 @@ async def on_message(message: discord.Message):
                     f"**{ACTIVITY_ROLE_NAME}** role!",
                     delete_after=30,
                 )
+                # DM notification
+                try:
+                    await message.author.send(
+                        f"🎊 Congratulations! Your 7-day activity streak in **{message.guild.name}** "
+                        f"has earned you the **{ACTIVITY_ROLE_NAME}** role. Keep up the great energy! 🚀"
+                    )
+                except discord.Forbidden:
+                    pass # DM blocked
             except discord.Forbidden:
                 print(f"[WARN] Cannot assign role to {message.author.name} — missing permissions.")
 
