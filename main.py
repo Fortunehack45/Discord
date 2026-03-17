@@ -128,7 +128,7 @@ async def handle_argus_questions(message: discord.Message):
 # Bot setup
 # ---------------------------------------------------------------------------
 intents = discord.Intents.all()
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='!', intents=intents, help_command=None)
 
 # ---------------------------------------------------------------------------
 # Profanity list
@@ -332,6 +332,27 @@ async def check_strikes(ctx: commands.Context):
             f"⚠️ You have **{current_strikes}** strikes. "
             f"You have **{strikes_left}** strikes left before being kicked."
         )
+
+
+@bot.command(name='help')
+async def help_command(ctx: commands.Context):
+    """Displays a list of all available commands and features."""
+    help_text = (
+        "🤖 **Discord Bot Help Menu** 🤖\n\n"
+        "**🛠️ Commands:**\n"
+        "`!help` - Shows this help menu.\n"
+        "`!role` - Lists all your current server roles.\n"
+        "`!strike` - Checks how many strikes you have remaining.\n\n"
+        "**🛡️ Argus Protocol Q&A:**\n"
+        "Mention me or say **'Argus'** followed by keywords like:\n"
+        "*what is, ghostdag, k-parameter, agent, linearizer, token, status, website, github*\n\n"
+        "**🚫 Automatic Moderation:**\n"
+        "• **Profanity Filter**: Deleting banned words automatically.\n"
+        "• **Auto-Kick**: Kick at 5 strikes.\n"
+        "• **Dynamic Slowmode**: Cooldowns based on chat activity.\n"
+        "• **Activity Rewards**: Earn the 'Regular' role in 7 days!"
+    )
+    await ctx.reply(help_text)
 
 
 # ---------------------------------------------------------------------------

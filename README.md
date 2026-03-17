@@ -7,6 +7,7 @@ A production-ready Discord bot built with `discord.py` (Python 3.12+) and config
 This bot operates primarily through intelligent event handling rather than traditional slash commands (to keep the interface clean and reactive).
 
 ### 🛠️ Bot Commands
+- `!help` - Show all available bot commands and features.
 - `!role` - List all your current server roles.
 - `!strike` - Check how many strikes you have left before being kicked.
 
