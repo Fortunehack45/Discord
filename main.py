@@ -1,10 +1,10 @@
-import discord
-from discord.ext import commands
+import discord # type: ignore
+from discord.ext import commands # type: ignore
 import os
 import json
 from typing import Dict, List
 from datetime import datetime, timedelta, timezone, date
-from dotenv import load_dotenv
+from dotenv import load_dotenv # type: ignore
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -300,7 +300,7 @@ async def on_message(message: discord.Message):
 
 
 import threading
-from flask import Flask
+from flask import Flask # type: ignore
 
 app = Flask(__name__)
 
