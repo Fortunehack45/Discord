@@ -262,9 +262,10 @@ async def on_message(message: discord.Message):
             except discord.Forbidden:
                 await message.channel.send("⚠️ I don't have permission to kick this user.")
         else:
+            strikes_left = 5 - current_strikes
             await message.channel.send(
                 f"⚠️ Warning {message.author.mention}! Profanity is not allowed. "
-                f"You have **{current_strikes}/5** strikes.",
+                f"You have **{strikes_left}** strikes left before being kicked.",
                 delete_after=10,
             )
         # Don't process further if message was deleted
