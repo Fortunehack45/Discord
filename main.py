@@ -101,7 +101,8 @@ def record_activity(user_id: str) -> int:
     if today_str not in dates:
         dates.append(today_str)
         # Keep only the last 30 days to avoid unbounded growth
-        dates = sorted(dates)[-30:]
+        all_sorted: List[str] = sorted(dates)
+        dates = all_sorted[-30:]
         activity[user_id] = dates
         save_activity(activity)
     else:
@@ -122,8 +123,8 @@ def _count_streak(sorted_dates: List[str]) -> int:
     for date_str in reversed(sorted_dates):
         d = date.fromisoformat(date_str)
         if d == expected:
-            streak += 1
-            expected -= timedelta(days=1)
+            streak = streak + 1
+            expected = expected - timedelta(days=1)
         elif d < expected:
             break   # gap — streak broken
 
