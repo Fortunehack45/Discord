@@ -299,6 +299,22 @@ async def on_message(message: discord.Message):
     await bot.process_commands(message)
 
 
+import threading
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Discord Bot is alive and running!"
+
+def run_flask():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+
+def keep_alive():
+    server = threading.Thread(target=run_flask)
+    server.start()
+
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
@@ -306,4 +322,7 @@ if __name__ == "__main__":
     if not TOKEN:
         print("❌ Error: DISCORD_TOKEN not found in .env file.")
     else:
+        print("Starting web server...")
+        keep_alive()
+        print("Starting Discord bot...")
         bot.run(TOKEN)
