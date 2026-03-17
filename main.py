@@ -412,20 +412,7 @@ async def on_message(message: discord.Message):
         return
 
     # ------------------------------------------------------------------
-    # 1. Mention reply
-    # ------------------------------------------------------------------
-    if bot.user.mentioned_in(message) and not message.mention_everyone:
-        await message.reply(f"Hello {message.author.mention}! How can I help you today? 😊")
-
-    # 1.5 Argus Q&A System
-    # Check if the message is a question about Argus (either tags bot or mentions argus)
-    if "argus" in message.content.lower() or bot.user.mentioned_in(message):
-        # We only auto-reply to mentions or direct mentions of Argus to avoid being too spammy
-        if await handle_argus_questions(message):
-            return
-
-    # ------------------------------------------------------------------
-    # 2. Profanity filter & strike system
+    # 1. Profanity filter & strike system (PRIORITY)
     # ------------------------------------------------------------------
     content_lower = message.content.lower()
     if any(word in content_lower for word in BANNED_WORDS):
@@ -467,6 +454,19 @@ async def on_message(message: discord.Message):
             )
         # Don't process further if message was deleted
         return
+
+    # ------------------------------------------------------------------
+    # 2. Mention reply
+    # ------------------------------------------------------------------
+    if bot.user.mentioned_in(message) and not message.mention_everyone:
+        await message.reply(f"Hello {message.author.mention}! How can I help you today? 😊")
+
+    # 2.5 Argus Q&A System
+    # Check if the message is a question about Argus (either tags bot or mentions argus)
+    if "argus" in message.content.lower() or bot.user.mentioned_in(message):
+        # We only auto-reply to mentions or direct mentions of Argus to avoid being too spammy
+        if await handle_argus_questions(message):
+            return
 
     # ------------------------------------------------------------------
     # 3. 7-day activity streak → assign "Regular" role
