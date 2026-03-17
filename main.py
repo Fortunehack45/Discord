@@ -2,9 +2,8 @@ import discord
 from discord.ext import commands
 import os
 import json
-import asyncio
 from typing import Dict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -96,7 +95,7 @@ async def handle_dynamic_slowmode(channel):
     if not isinstance(channel, discord.TextChannel):
         return
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     channel_id = str(channel.id)
     
     if channel_id not in message_counts:
@@ -126,7 +125,7 @@ async def handle_dynamic_slowmode(channel):
         try:
             await channel.edit(slowmode_delay=new_slowmode)
             if new_slowmode > 0:
-                await channel.send(f"Chat implementation: Dynamic slowmode set to {new_slowmode//60} minute(s) due to high activity.", delete_after=5)
+                await channel.send(f"🔒 Slowmode activated: {new_slowmode//60} minute(s) due to high activity.", delete_after=5)
             else:
                 await channel.send("Chat has cooled down. Slowmode disabled.", delete_after=5)
         except discord.Forbidden:
